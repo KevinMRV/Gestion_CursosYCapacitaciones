@@ -90,9 +90,12 @@ const MapeoColumnasExcel = {
 /* ---------- Estado de la interfaz ---------- */
 
 let idSeleccionado = null;
-let idParaEliminar = null;
+let IdsParaEliminar = [];
 let registroEnEdicion = null;
 let cacheDatos = null;
+
+// IDs marcados con checkbox en la tabla principal, para borrado múltiple.
+const SeleccionActual = new Set();
 
 const Estado_UI = {
     orden: { campo: "Fecha", asc: false },
@@ -260,9 +263,11 @@ function OrdenarRegistros(lista) {
 }
 
 function GenerarEncabezado() {
-    $("EncabezadoTabla").innerHTML = COLUMNAS.map((c) =>
+    const columnaSeleccion = `<th scope="col" class="th_seleccion"><input type="checkbox" id="CheckSeleccionarTodo" aria-label="Seleccionar todos los registros visibles"></th>`;
+    const columnas = COLUMNAS.map((c) =>
         `<th scope="col" data-campo="${c.campo}" tabindex="0" aria-sort="none">${c.titulo}<span class="icono_orden" aria-hidden="true"></span></th>`
     ).join("");
+    $("EncabezadoTabla").innerHTML = columnaSeleccion + columnas;
 }
 
 function ActualizarIndicadoresOrden() {
@@ -293,8 +298,39 @@ function CeldaHTML(registro, columna) {
 }
 
 function FilaHTML(registro) {
+    const marcado = SeleccionActual.has(registro.ID) ? "checked" : "";
+    const celdaSeleccion = `<td class="td_seleccion"><input type="checkbox" class="check_fila" data-id="${Escapar(registro.ID)}" aria-label="Seleccionar registro" ${marcado}></td>`;
     const celdas = COLUMNAS.map((c) => `<td>${CeldaHTML(registro, c)}</td>`).join("");
-    return `<tr class="fila_clickable" data-id="${Escapar(registro.ID)}" tabindex="0" title="Haz clic para ver los detalles">${celdas}</tr>`;
+    return `<tr class="fila_clickable" data-id="${Escapar(registro.ID)}" tabindex="0" title="Haz clic para ver los detalles">${celdaSeleccion}${celdas}</tr>`;
+}
+
+/* ---------- Selección múltiple (borrado en lote) ---------- */
+
+function ActualizarEstadoBotonEliminarSeleccionados() {
+    const boton = $("BtnEliminarSeleccionados");
+    if (!boton) return;
+    const cantidad = SeleccionActual.size;
+    boton.disabled = cantidad === 0;
+    boton.textContent = cantidad > 0 ? `Eliminar seleccionados (${cantidad})` : "Eliminar seleccionados";
+}
+
+function VisiblesActuales() {
+    const filtrados = OrdenarRegistros(ObtenerFiltrados());
+    const inicio = (Estado_UI.pagina - 1) * Estado_UI.porPagina;
+    return filtrados.slice(inicio, inicio + Estado_UI.porPagina);
+}
+
+function ActualizarCheckSeleccionarTodo(visibles) {
+    const check = $("CheckSeleccionarTodo");
+    if (!check) return;
+    if (visibles.length === 0) {
+        check.checked = false;
+        check.indeterminate = false;
+        return;
+    }
+    const seleccionadosVisibles = visibles.filter((r) => SeleccionActual.has(r.ID)).length;
+    check.checked = seleccionadosVisibles === visibles.length;
+    check.indeterminate = seleccionadosVisibles > 0 && seleccionadosVisibles < visibles.length;
 }
 
 function ActualizarResumen(lista) {
@@ -335,11 +371,13 @@ function Generar_Tabla() {
     const visibles = filtrados.slice(inicio, inicio + Estado_UI.porPagina);
 
     tbody.innerHTML = filtrados.length === 0
-        ? `<tr><td colspan="${COLUMNAS.length}" class="fila_vacia">No se encontraron registros con los filtros actuales.</td></tr>`
+        ? `<tr><td colspan="${COLUMNAS.length + 1}" class="fila_vacia">No se encontraron registros con los filtros actuales.</td></tr>`
         : visibles.map(FilaHTML).join("");
 
     ActualizarPaginacion(filtrados.length, inicio, visibles.length, totalPaginas);
     ActualizarIndicadoresOrden();
+    ActualizarCheckSeleccionarTodo(visibles);
+    ActualizarEstadoBotonEliminarSeleccionados();
 }
 
 function AplicarFiltros() {
@@ -421,32 +459,45 @@ function CerrarModal() {
     idSeleccionado = null;
 }
 
-function AbrirModalEliminar(id) {
-    idParaEliminar = String(id);
+function AbrirModalEliminar(ids) {
+    IdsParaEliminar = (Array.isArray(ids) ? ids : [ids]).map(String);
     $("InputConfirmarEliminar").value = "";
     $("MensajeErrorConfirmacion").textContent = "";
     $("MensajeErrorConfirmacion").className = "Mensaje_Importacion";
+
+    const textoConfirmar = $("TextoConfirmarEliminar");
+    if (textoConfirmar) {
+        textoConfirmar.textContent = IdsParaEliminar.length > 1
+            ? `¿Estás seguro que deseas eliminar estos ${IdsParaEliminar.length} registros? Esta acción no se puede deshacer.`
+            : "¿Estás seguro que deseas eliminar este registro? Esta acción no se puede deshacer.";
+    }
+
     $("Modal_ConfirmarEliminar").style.display = "flex";
     $("InputConfirmarEliminar").focus();
 }
 
 function CerrarModalEliminar() {
     $("Modal_ConfirmarEliminar").style.display = "none";
-    idParaEliminar = null;
+    IdsParaEliminar = [];
 }
 
 function ConfirmarEliminacionDefinitiva() {
-    if (idParaEliminar === null) return;
+    if (IdsParaEliminar.length === 0) return;
 
     if ($("InputConfirmarEliminar").value.trim() !== "Confirmar") {
         MostrarMensaje($("MensajeErrorConfirmacion"), 'Debes escribir exactamente "Confirmar" para continuar.', "error");
         return;
     }
 
-    GuardarDatos(ObtenerDatos().filter((r) => r.ID !== idParaEliminar));
+    const idsAEliminar = new Set(IdsParaEliminar);
+    const cantidad = idsAEliminar.size;
+
+    GuardarDatos(ObtenerDatos().filter((r) => !idsAEliminar.has(r.ID)));
+    idsAEliminar.forEach((id) => SeleccionActual.delete(id));
+
     CerrarModalEliminar();
     Generar_Tabla();
-    MostrarToast("Registro eliminado.");
+    MostrarToast(cantidad > 1 ? `${cantidad} registros eliminados.` : "Registro eliminado.");
 }
 
 /* ---------- Formulario de registro / edición ---------- */
@@ -520,20 +571,116 @@ function InicializarFormulario() {
 
 /* ---------- Importación desde Excel ---------- */
 
-function ProcesarArchivoExcel(file) {
-    const mensaje = $("MensajeImportacion");
-    const reader = new FileReader();
+// Estado de la importación en curso, usado por el modal de progreso y por Cancelar.
+let ImportacionEnCurso = null; // { reader, intervalId, cancelado }
 
-    reader.onerror = () => MostrarMensaje(mensaje, "No se pudo leer el archivo seleccionado.", "error");
+function FormatearSegundosRestantes(ms) {
+    const segundos = Math.max(0, Math.ceil(ms / 1000));
+    return segundos <= 1 ? "1 segundo" : `${segundos} segundos`;
+}
+
+// Estimación simple según el tamaño del archivo (entre 1.5 y 8 segundos).
+function EstimarDuracionMs(file) {
+    const base = 1200;
+    const porTamano = (file.size / (250 * 1024)) * 1000;
+    return Math.min(8000, Math.max(1500, base + porTamano));
+}
+
+function AbrirModalImportando(file) {
+    $("ArchivoImportandoNombre").textContent = `Archivo: ${file.name}`;
+    $("ResultadoImportar").textContent = "";
+    $("ResultadoImportar").className = "Mensaje_Importacion";
+
+    const barra = $("BarraProgresoImportar");
+    barra.style.width = "0%";
+    barra.classList.remove("completa");
+
+    $("TiempoEstimadoImportar").textContent = "Calculando tiempo estimado...";
+    $("BtnCancelarImportar").style.display = "";
+    $("BtnCancelarImportar").disabled = false;
+    $("BtnAceptarImportar").style.display = "none";
+
+    $("Modal_Importando").style.display = "flex";
+    $("BtnCancelarImportar").focus();
+}
+
+function ActualizarProgresoImportar(porcentaje, msRestante) {
+    $("BarraProgresoImportar").style.width = `${Math.min(100, Math.round(porcentaje))}%`;
+    $("TiempoEstimadoImportar").textContent = `Tiempo estimado restante: ${FormatearSegundosRestantes(msRestante)}`;
+}
+
+function FinalizarModalImportando(mensaje, tipo) {
+    if (ImportacionEnCurso && ImportacionEnCurso.intervalId) {
+        clearInterval(ImportacionEnCurso.intervalId);
+    }
+    ImportacionEnCurso = null;
+
+    const barra = $("BarraProgresoImportar");
+    barra.style.width = "100%";
+    barra.classList.toggle("completa", tipo !== "error");
+
+    $("TiempoEstimadoImportar").textContent = tipo === "error" ? "La importación no se completó." : "Importación completa.";
+    MostrarMensaje($("ResultadoImportar"), mensaje, tipo);
+
+    $("BtnCancelarImportar").style.display = "none";
+    $("BtnAceptarImportar").style.display = "";
+    $("BtnAceptarImportar").focus();
+}
+
+function CancelarImportacion() {
+    if (!ImportacionEnCurso) return;
+
+    const enCurso = ImportacionEnCurso;
+    ImportacionEnCurso = null;
+    clearInterval(enCurso.intervalId);
+    if (enCurso.reader && enCurso.reader.readyState === FileReader.LOADING) {
+        enCurso.reader.abort();
+    }
+
+    $("Modal_Importando").style.display = "none";
+    $("ArchivoExcel").value = "";
+    MostrarMensaje($("MensajeImportacion"), "Importación cancelada.", "error");
+}
+
+// Inicia la animación de progreso y delega el trabajo real a ProcesarArchivoExcel.
+function IniciarImportacionConProgreso(file) {
+    AbrirModalImportando(file);
+
+    const duracion = EstimarDuracionMs(file);
+    const inicio = Date.now();
+    const estado = { reader: null, intervalId: null, cancelado: false };
+    ImportacionEnCurso = estado;
+
+    estado.intervalId = setInterval(() => {
+        const transcurrido = Date.now() - inicio;
+        const porcentaje = Math.min(96, (transcurrido / duracion) * 100); // deja margen para el cierre real
+        ActualizarProgresoImportar(porcentaje, Math.max(0, duracion - transcurrido));
+    }, 100);
+
+    ProcesarArchivoExcel(file, estado);
+}
+
+function ProcesarArchivoExcel(file, estadoImportacion) {
+    const reader = new FileReader();
+    if (estadoImportacion) estadoImportacion.reader = reader;
+
+    // Si el usuario canceló (o inició otra importación) mientras se leía el archivo, no reportar nada.
+    const fueCancelada = () => !estadoImportacion || ImportacionEnCurso !== estadoImportacion;
+
+    reader.onerror = () => {
+        if (fueCancelada()) return;
+        FinalizarModalImportando("No se pudo leer el archivo seleccionado.", "error");
+    };
 
     reader.onload = (e) => {
+        if (fueCancelada()) return;
         try {
             const libro = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
             const hoja = libro.Sheets[libro.SheetNames[0]];
             const filas = XLSX.utils.sheet_to_json(hoja, { header: 1, defval: "" });
 
             if (!filas || filas.length < 2) {
-                MostrarMensaje(mensaje, "El archivo no contiene datos para importar.", "error");
+                FinalizarModalImportando("El archivo no contiene datos para importar.", "error");
                 return;
             }
 
@@ -545,7 +692,7 @@ function ProcesarArchivoExcel(file) {
             });
 
             if (indice.Funcionario === undefined || indice.Curso === undefined) {
-                MostrarMensaje(mensaje, "Faltan las columnas mínimas: Actividad y Funcionario Seleccionado. Revisa los encabezados o descarga la plantilla.", "error");
+                FinalizarModalImportando("Faltan las columnas mínimas: Actividad y Funcionario Seleccionado. Revisa los encabezados o descarga la plantilla.", "error");
                 return;
             }
 
@@ -592,24 +739,27 @@ function ProcesarArchivoExcel(file) {
             }
 
             if (nuevos.length === 0) {
-                MostrarMensaje(mensaje, "No se importó ningún registro: las filas estaban incompletas o ya existían.", "error");
+                FinalizarModalImportando("No se importó ningún registro: las filas estaban incompletas o ya existían.", "error");
                 return;
             }
 
-            if (!GuardarDatos(actuales.concat(nuevos))) return;
+            if (!GuardarDatos(actuales.concat(nuevos))) {
+                FinalizarModalImportando("No se pudo guardar la información importada en el navegador.", "error");
+                return;
+            }
 
             let resumen = `Se importaron ${nuevos.length} registro(s) correctamente.`;
             if (duplicados) resumen += ` ${duplicados} omitido(s) por estar duplicados.`;
             if (incompletas) resumen += ` ${incompletas} fila(s) sin actividad o funcionario.`;
             if (fechasNoReconocidas) resumen += ` ${fechasNoReconocidas} fecha(s) no reconocida(s) quedaron vacías.`;
-            MostrarMensaje(mensaje, resumen, "exito");
 
             $("ArchivoExcel").value = "";
             LlenarListaCursos();
             Generar_Tabla();
+            FinalizarModalImportando(resumen, "exito");
         } catch (error) {
             console.error(error);
-            MostrarMensaje(mensaje, "Ocurrió un error al procesar el archivo. Verifica el formato.", "error");
+            FinalizarModalImportando("Ocurrió un error al procesar el archivo. Verifica el formato.", "error");
         }
     };
 
@@ -650,10 +800,16 @@ function InicializarImportacion() {
             MostrarMensaje(mensaje, "No se pudo cargar la librería de Excel. Revisa tu conexión.", "error");
             return;
         }
-        ProcesarArchivoExcel(archivos[0]);
+        IniciarImportacionConProgreso(archivos[0]);
     });
 
     $("BtnDescargarPlantilla").addEventListener("click", DescargarPlantilla);
+
+    // Modal de progreso de importación: cancelar detiene la lectura; aceptar vuelve a la página principal.
+    $("BtnCancelarImportar").addEventListener("click", CancelarImportacion);
+    $("BtnAceptarImportar").addEventListener("click", () => {
+        window.location.href = "index.html";
+    });
 }
 
 /* ---------- Inicialización ---------- */
@@ -692,12 +848,39 @@ function InicializarTabla() {
     // Filas: una sola escucha para toda la tabla
     const tbody = $("DatosTabla");
     tbody.addEventListener("click", (e) => {
+        if (e.target.closest(".td_seleccion")) return;
         const fila = e.target.closest("tr[data-id]");
         if (fila) verDetalles(fila.dataset.id);
     });
     tbody.addEventListener("keydown", (e) => {
+        if (e.target.closest(".td_seleccion")) return;
         const fila = e.target.closest("tr[data-id]");
         if (fila && e.key === "Enter") verDetalles(fila.dataset.id);
+    });
+
+    // Selección múltiple: checkbox de cada fila
+    tbody.addEventListener("change", (e) => {
+        const check = e.target.closest(".check_fila");
+        if (!check) return;
+        if (check.checked) SeleccionActual.add(check.dataset.id);
+        else SeleccionActual.delete(check.dataset.id);
+        ActualizarEstadoBotonEliminarSeleccionados();
+        ActualizarCheckSeleccionarTodo(VisiblesActuales());
+    });
+
+    // Selección múltiple: checkbox "seleccionar todo" (aplica a la página visible)
+    $("CheckSeleccionarTodo").addEventListener("change", (e) => {
+        VisiblesActuales().forEach((r) => {
+            if (e.target.checked) SeleccionActual.add(r.ID);
+            else SeleccionActual.delete(r.ID);
+        });
+        Generar_Tabla();
+    });
+
+    // Botón para eliminar todos los registros marcados
+    $("BtnEliminarSeleccionados").addEventListener("click", () => {
+        if (SeleccionActual.size === 0) return;
+        AbrirModalEliminar([...SeleccionActual]);
     });
 
     // Paginación

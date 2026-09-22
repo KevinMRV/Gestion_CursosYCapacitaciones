@@ -109,6 +109,22 @@
         </div>
     </main>
 
+    <div id="Modal_Importando" class="modal" role="dialog" aria-modal="true" aria-labelledby="TituloImportando">
+        <div class="modal_contenido modal_importando">
+            <h2 id="TituloImportando">Importando archivo</h2>
+            <p id="ArchivoImportandoNombre" class="nombre_archivo_importando"></p>
+            <div class="barra_progreso_contenedor">
+                <div id="BarraProgresoImportar" class="barra_progreso"></div>
+            </div>
+            <p id="TiempoEstimadoImportar" class="texto_tiempo_estimado"></p>
+            <p id="ResultadoImportar" class="Mensaje_Importacion" role="status"></p>
+            <div class="modal_acciones">
+                <button type="button" id="BtnCancelarImportar" class="btn_eliminar">Cancelar</button>
+                <button type="button" id="BtnAceptarImportar" class="btn_aceptar" style="display:none;">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="Funciones_Javascript.js"></script>
 </body>

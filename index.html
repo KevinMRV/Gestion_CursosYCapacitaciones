@@ -44,6 +44,7 @@
 
             <button type="button" id="BtnLimpiarFiltros" class="btn_secundario">Limpiar filtros</button>
             <button type="button" id="BtnExportarCSV" class="btn_secundario">Exportar CSV</button>
+            <button type="button" id="BtnEliminarSeleccionados" class="btn_secundario btn_eliminar_seleccion" disabled>Eliminar seleccionados</button>
         </div>
 
         <div class="Tabla">
@@ -84,7 +85,7 @@
     <div id="Modal_ConfirmarEliminar" class="modal" role="dialog" aria-modal="true" aria-labelledby="TituloEliminar">
         <div class="modal_contenido modal_confirmar">
             <h2 id="TituloEliminar">Eliminar Registro</h2>
-            <p class="texto_confirmacion">
+            <p id="TextoConfirmarEliminar" class="texto_confirmacion">
                 ¿Estás seguro que deseas eliminar este registro? Esta acción no se puede deshacer.
             </p>
             <div class="campo">

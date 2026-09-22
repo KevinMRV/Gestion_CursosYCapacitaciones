@@ -177,9 +177,23 @@ header {
 
 table {
     width: 100%;
-    min-width: 1500px;
+    min-width: 1540px;
     border-collapse: separate;
     border-spacing: 0;
+}
+
+.th_seleccion,
+.td_seleccion {
+    width: 42px;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+}
+
+.check_fila,
+#CheckSeleccionarTodo {
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
 }
 
 thead th {
@@ -331,6 +345,16 @@ tbody tr.fila_clickable:focus-visible {
 .btn_secundario:disabled {
     opacity: 0.45;
     cursor: not-allowed;
+}
+
+.btn_secundario.btn_eliminar_seleccion {
+    color: var(--rojo);
+    border-color: var(--rojo);
+}
+
+.btn_secundario.btn_eliminar_seleccion:hover:not(:disabled) {
+    background-color: var(--rojo);
+    color: white;
 }
 
 .Boton-Inspeccionar {
@@ -635,6 +659,51 @@ tbody tr.fila_clickable:focus-visible {
     outline: none;
     border-color: var(--rojo);
     box-shadow: 0 0 0 3px rgba(210, 40, 40, 0.15);
+}
+
+/* ---------- Modal de importación con progreso ---------- */
+
+.modal_importando .modal_acciones {
+    justify-content: center;
+}
+
+.nombre_archivo_importando {
+    font-size: 0.9rem;
+    color: #333;
+    text-align: center;
+    word-break: break-all;
+}
+
+.barra_progreso_contenedor {
+    width: 100%;
+    height: 14px;
+    background-color: #e6e8eb;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.barra_progreso {
+    height: 100%;
+    width: 0%;
+    background-color: var(--azul);
+    border-radius: 999px;
+    transition: width 0.2s linear, background-color 0.3s ease;
+}
+
+.barra_progreso.completa {
+    background-color: rgb(0, 150, 60);
+}
+
+.texto_tiempo_estimado {
+    font-size: 0.85rem;
+    color: #555;
+    text-align: center;
+}
+
+#BtnAceptarImportar,
+#BtnCancelarImportar {
+    max-width: 220px;
+    margin: 0 auto;
 }
 
 /* ---------- Avisos (toast) ---------- */

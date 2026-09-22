@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión Capacitaciones SII</title>
+    <link rel="stylesheet" href="Estilos.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar" aria-label="Navegación principal">
+            <ul class="nav-links">
+                <li><a href="index.html" aria-current="page">SII</a></li>
+                <li><a href="Registro_Funcionarios.html">Agregar Funcionarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="Resumen" class="Resumen" aria-label="Resumen de capacitaciones"></section>
+
+        <div class="Filtros">
+            <input type="text" id="IngresarBusqueda" placeholder="Buscar por funcionario, curso o código" aria-label="Buscar">
+
+            <select id="FiltroDepartamento" aria-label="Filtrar por departamento">
+                <option value="">Todos los Departamentos</option>
+                <option value="Administración">Administración</option>
+                <option value="Fiscalización">Fiscalización</option>
+            </select>
+
+            <select id="FiltroModalidad" aria-label="Filtrar por modalidad">
+                <option value="">Todas las Modalidades</option>
+                <option value="Presencial">Presencial</option>
+                <option value="Online Synchronous">Online Sincrónico</option>
+                <option value="E-Learning">E-Learning</option>
+            </select>
+
+            <select id="FiltroEstado" aria-label="Filtrar por estado">
+                <option value="">Todos los Estados</option>
+                <option value="proxima">Próxima</option>
+                <option value="en-curso">En curso</option>
+                <option value="finalizada">Finalizada</option>
+            </select>
+
+            <button type="button" id="BtnLimpiarFiltros" class="btn_secundario">Limpiar filtros</button>
+            <button type="button" id="BtnExportarCSV" class="btn_secundario">Exportar CSV</button>
+        </div>
+
+        <div class="Tabla">
+            <table>
+                <thead>
+                    <tr id="EncabezadoTabla"></tr>
+                </thead>
+                <tbody id="DatosTabla"></tbody>
+            </table>
+        </div>
+
+        <div class="paginacion">
+            <span id="InfoPaginacion"></span>
+            <div class="paginacion_controles">
+                <button type="button" id="BtnPaginaAnterior" class="btn_secundario">Anterior</button>
+                <span id="NumeroPagina"></span>
+                <button type="button" id="BtnPaginaSiguiente" class="btn_secundario">Siguiente</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="Modal_Detalles" class="modal" role="dialog" aria-modal="true" aria-labelledby="TituloDetalles">
+        <div class="modal_contenido">
+            <h2 id="TituloDetalles">Detalles</h2>
+            <ul id="Lista_Detalles" class="lista_detalles"></ul>
+            <div class="campo_descripcion">
+                <label for="Descripcion_Curso"><strong>Descripción del curso/capacitación:</strong></label>
+                <textarea id="Descripcion_Curso" rows="4" readonly></textarea>
+            </div>
+            <div class="modal_acciones">
+                <button type="button" id="BtnAceptarModal" class="btn_aceptar">Aceptar</button>
+                <button type="button" id="BtnEditarModal" class="btn_editar">Editar</button>
+                <button type="button" id="BtnEliminarModal" class="btn_eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="Modal_ConfirmarEliminar" class="modal" role="dialog" aria-modal="true" aria-labelledby="TituloEliminar">
+        <div class="modal_contenido modal_confirmar">
+            <h2 id="TituloEliminar">Eliminar Registro</h2>
+            <p class="texto_confirmacion">
+                ¿Estás seguro que deseas eliminar este registro? Esta acción no se puede deshacer.
+            </p>
+            <div class="campo">
+                <label for="InputConfirmarEliminar">
+                    Para confirmar, escribe <strong>Confirmar</strong>:
+                </label>
+                <input type="text" id="InputConfirmarEliminar" placeholder="Escribe aquí..." autocomplete="off">
+            </div>
+            <p id="MensajeErrorConfirmacion" class="Mensaje_Importacion" role="alert"></p>
+            <div class="modal_acciones">
+                <button type="button" id="BtnCancelarEliminar" class="btn_aceptar">Cancelar</button>
+                <button type="button" id="BtnConfirmarEliminarDefinitivo" class="btn_eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Funciones_Javascript.js"></script>
+</body>
+</html>

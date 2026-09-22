@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Funcionarios</title>
+    <link rel="stylesheet" href="Estilos.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar" aria-label="Navegación principal">
+            <ul class="nav-links">
+                <li><a href="index.html">SII</a></li>
+                <li><a href="Registro_Funcionarios.html" aria-current="page">Agregar Funcionarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="Formulario Formulario-Importar">
+            <h2>Importar Funcionarios desde Excel</h2>
+            <div class="campo">
+                <label for="ArchivoExcel">Selecciona archivo (.xlsx / .xls):</label>
+                <input type="file" id="ArchivoExcel" accept=".xlsx, .xls">
+            </div>
+            <div class="acciones_importar">
+                <button type="button" id="BtnImportarExcel" class="Boton_Guardar">Importar Excel</button>
+                <button type="button" id="BtnDescargarPlantilla" class="btn_secundario">Descargar plantilla</button>
+            </div>
+            <p id="MensajeImportacion" class="Mensaje_Importacion" role="status"></p>
+        </div>
+
+        <div class="Formulario">
+            <h2 id="TituloFormulario">Registrar Funcionarios Nuevos</h2>
+            <form id="FormCapacitacion">
+                <div class="campo">
+                    <label for="Nuevo_Codigo">Código Versión:</label>
+                    <input type="text" id="Nuevo_Codigo" placeholder="Ej: V-2026-01">
+                </div>
+
+                <div class="campo">
+                    <label for="Nuevo_Curso">Actividad / Capacitación:</label>
+                    <input type="text" id="Nuevo_Curso" list="ListaCursos" required placeholder="Ej: Declaración Renta">
+                    <datalist id="ListaCursos"></datalist>
+                </div>
+
+                <div class="campo">
+                    <label for="Nueva_Fecha">Fecha de Inicio:</label>
+                    <input type="date" id="Nueva_Fecha" required>
+                </div>
+
+                <div class="campo">
+                    <label for="Nuevo_Examen">Fecha de Término:</label>
+                    <input type="date" id="Nuevo_Examen" required>
+                </div>
+
+                <div class="campo">
+                    <label for="Nueva_Modalidad">Modalidad:</label>
+                    <select id="Nueva_Modalidad">
+                        <option value="Presencial">Presencial</option>
+                        <option value="Online Synchronous">Online Sincrónico</option>
+                        <option value="E-Learning">E-Learning</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="Nuevo_Lugar">Lugar:</label>
+                    <input type="text" id="Nuevo_Lugar" placeholder="Ej: Punta Arenas / Teams">
+                </div>
+
+                <div class="campo">
+                    <label for="Nuevo_TipoInscripcion">Tipo de Inscripción:</label>
+                    <input type="text" id="Nuevo_TipoInscripcion" placeholder="Ej: Obligatoria / Voluntaria">
+                </div>
+
+                <div class="campo">
+                    <label for="Nuevo_Origen">Origen:</label>
+                    <input type="text" id="Nuevo_Origen" placeholder="Ej: Central / Regional">
+                </div>
+
+                <div class="campo">
+                    <label for="Nueva_DireccionRegional">Dirección Regional:</label>
+                    <input type="text" id="Nueva_DireccionRegional" value="XII DIRECCIÓN REGIONAL PUNTA ARENAS">
+                </div>
+
+                <div class="campo">
+                    <label for="Nuevo_Departamento">Departamento:</label>
+                    <select id="Nuevo_Departamento" required>
+                        <option value="">Seleccione Departamento</option>
+                        <option value="Administración">Administración</option>
+                        <option value="Fiscalización">Fiscalización</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="Nuevo_Funcionario">Funcionario Seleccionado:</label>
+                    <input type="text" id="Nuevo_Funcionario" required placeholder="Ej: Nahuel Melo">
+                </div>
+
+                <div class="campo">
+                    <label for="Nueva_Observacion">Observaciones:</label>
+                    <input type="text" id="Nueva_Observacion" placeholder="Notas adicionales">
+                </div>
+
+                <p id="MensajeFormulario" class="Mensaje_Importacion" role="alert"></p>
+
+                <button type="submit" id="BtnGuardarRegistro" class="Boton_Guardar">Guardar Registro</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="Funciones_Javascript.js"></script>
+</body>
+</html>

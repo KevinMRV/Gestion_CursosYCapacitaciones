@@ -1,0 +1,702 @@
+/* =========================================================
+   Gestión de Capacitaciones - Estilos.css
+   Paleta original: azul rgb(0,100,160) y naranja rgb(230,80,10)
+   ========================================================= */
+
+:root {
+    --azul: rgb(0, 100, 160);
+    --azul-oscuro: rgb(0, 80, 130);
+    --naranja: rgb(230, 80, 10);
+    --naranja-oscuro: rgb(190, 62, 4);
+    --rojo: rgb(210, 40, 40);
+    --rojo-oscuro: rgb(170, 30, 30);
+    --texto: #222;
+    --fondo: #f4f7fa;
+    --borde: rgba(40, 35, 35, 0.863);
+    --borde-suave: rgba(40, 35, 35, 0.22);
+    --radio: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: var(--fondo);
+    color: var(--texto);
+}
+
+:focus-visible {
+    outline: 3px solid rgba(0, 100, 160, 0.55);
+    outline-offset: 2px;
+}
+
+/* ---------- Navbar ---------- */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 50px;
+    background-color: var(--azul);
+    padding: 0 4rem;
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-links li {
+    height: 100%;
+    display: flex;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: x-large;
+    background-color: var(--naranja);
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 3rem;
+    transition: background-color 0.2s ease;
+}
+
+.nav-links a:hover {
+    background-color: var(--naranja-oscuro);
+}
+
+/* Página actual: barra blanca inferior */
+.nav-links a[aria-current="page"] {
+    box-shadow: inset 0 -4px 0 white;
+}
+
+.nav-links a:focus-visible {
+    outline-color: white;
+    outline-offset: -4px;
+}
+
+/* ---------- Resumen ---------- */
+
+.Resumen {
+    display: flex;
+    gap: 1rem;
+    max-width: 95%;
+    margin: 2rem auto 0;
+}
+
+.resumen_item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.8rem 1.2rem;
+    background-color: white;
+    border: 1px solid var(--borde-suave);
+    border-left: 5px solid var(--azul);
+    border-radius: 8px;
+}
+
+.resumen_en-curso { border-left-color: var(--naranja); }
+.resumen_finalizada { border-left-color: #8a9096; }
+
+.resumen_numero {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--azul);
+}
+
+.resumen_en-curso .resumen_numero { color: var(--naranja-oscuro); }
+.resumen_finalizada .resumen_numero { color: #4a4f55; }
+
+.resumen_texto {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* ---------- Filtros ---------- */
+
+.Filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 95%;
+    margin: 1.5rem auto;
+}
+
+.Filtros input,
+.Filtros select {
+    padding: 0.6rem 1rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: white;
+}
+
+.Filtros input {
+    flex: 1;
+    min-width: 220px;
+}
+
+.Filtros select {
+    cursor: pointer;
+}
+
+.Filtros input:focus,
+.Filtros select:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(0, 100, 160, 0.15);
+}
+
+/* ---------- Tabla ---------- */
+
+.Tabla {
+    max-width: 95%;
+    margin: 0 auto 1rem;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+    background-color: white;
+    overflow: auto;
+    max-height: 65vh;
+}
+
+table {
+    width: 100%;
+    min-width: 1500px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--azul);
+    color: white;
+    padding: 0.9rem 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.35);
+    border-bottom: 1px solid var(--borde);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+thead th:last-child {
+    border-right: none;
+}
+
+thead th:hover {
+    background-color: var(--azul-oscuro);
+}
+
+thead th:focus-visible {
+    outline-color: white;
+    outline-offset: -4px;
+}
+
+.icono_orden {
+    display: inline-block;
+    width: 1em;
+    margin-left: 0.3rem;
+    font-size: 0.75rem;
+}
+
+th[aria-sort="ascending"] .icono_orden::after { content: "▲"; }
+th[aria-sort="descending"] .icono_orden::after { content: "▼"; }
+
+td {
+    padding: 0.75rem 0.6rem;
+    font-size: 0.95rem;
+    text-align: center;
+    color: black;
+    border-right: 1px solid var(--borde-suave);
+    border-bottom: 1px solid var(--borde-suave);
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.fila_clickable {
+    cursor: pointer;
+}
+
+tbody tr.fila_clickable:hover,
+tbody tr.fila_clickable:focus-visible {
+    background-color: rgba(230, 80, 10, 0.14);
+}
+
+.fila_vacia {
+    padding: 2rem;
+    color: #555;
+}
+
+/* Estados */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.badge_proxima { background-color: rgba(0, 100, 160, 0.12); color: var(--azul-oscuro); }
+.badge_en-curso { background-color: rgba(230, 80, 10, 0.15); color: var(--naranja-oscuro); }
+.badge_finalizada { background-color: #e6e8eb; color: #4a4f55; }
+.badge_sin-fecha { background-color: #f0f0f0; color: #777; }
+
+/* ---------- Paginación ---------- */
+
+.paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 95%;
+    margin: 0 auto 3rem;
+    font-size: 0.9rem;
+}
+
+.paginacion_controles {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+/* ---------- Botones ---------- */
+
+.Boton_Guardar {
+    background-color: var(--azul);
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 100, 160, 0.35);
+    transition: background-color 0.2s ease;
+}
+
+.Boton_Guardar:hover {
+    background-color: var(--naranja);
+}
+
+.Boton_Guardar:active {
+    transform: scale(0.98);
+}
+
+.btn_secundario {
+    background-color: white;
+    color: var(--azul);
+    border: 2px solid var(--azul);
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn_secundario:hover:not(:disabled) {
+    background-color: var(--azul);
+    color: white;
+}
+
+.btn_secundario:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.Boton-Inspeccionar {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+/* ---------- Formularios ---------- */
+
+.Formulario {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    border: 1px solid rgba(40, 35, 35, 0.15);
+    border-radius: var(--radio);
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.25s ease;
+}
+
+.Formulario:hover {
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.Formulario h2 {
+    position: relative;
+    padding-bottom: 0.8rem;
+    margin-bottom: 2rem;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+    text-align: center;
+    color: var(--azul);
+}
+
+.Formulario h2::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    border-radius: 4px;
+    background-color: var(--naranja);
+}
+
+#FormCapacitacion {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.campo label {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+#FormCapacitacion input,
+#FormCapacitacion select,
+.Formulario-Importar input[type="file"] {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: white;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#FormCapacitacion input:focus,
+#FormCapacitacion select:focus,
+.Formulario-Importar input[type="file"]:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(0, 100, 160, 0.15);
+}
+
+@media (min-width: 720px) {
+    .Formulario:not(.Formulario-Importar) {
+        max-width: 800px;
+    }
+
+    #FormCapacitacion {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 1.5rem;
+        row-gap: 1rem;
+    }
+
+    /* Actividad, mensaje y botón ocupan el ancho completo */
+    #FormCapacitacion .campo:nth-child(2),
+    #FormCapacitacion .Mensaje_Importacion,
+    #FormCapacitacion .Boton_Guardar {
+        grid-column: 1 / -1;
+    }
+}
+
+/* ---------- Importar desde Excel ---------- */
+
+.Formulario-Importar {
+    max-width: 600px;
+    border: 2px dashed var(--azul);
+    background-color: rgba(0, 100, 160, 0.03);
+}
+
+.Formulario-Importar .campo label {
+    color: var(--azul);
+}
+
+.Formulario-Importar input[type="file"] {
+    padding: 0.5rem;
+    border-color: rgba(40, 35, 35, 0.4);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.Formulario-Importar input[type="file"]::file-selector-button {
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--azul);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.Formulario-Importar input[type="file"]::file-selector-button:hover {
+    background-color: var(--naranja);
+}
+
+.acciones_importar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.acciones_importar .Boton_Guardar,
+.acciones_importar .btn_secundario {
+    flex: 1;
+    margin-top: 0;
+    padding: 0.8rem;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+/* Mensajes (éxito / error): se muestran solo si tienen la clase */
+.Mensaje_Importacion {
+    display: none;
+    margin-top: 1rem;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.Mensaje_Importacion.exito {
+    display: block;
+    background-color: rgba(0, 150, 60, 0.12);
+    color: rgb(0, 110, 40);
+    border: 1px solid rgba(0, 150, 60, 0.35);
+}
+
+.Mensaje_Importacion.error {
+    display: block;
+    background-color: rgba(210, 40, 40, 0.1);
+    color: var(--rojo-oscuro);
+    border: 1px solid rgba(210, 40, 40, 0.35);
+}
+
+#MensajeErrorConfirmacion:empty {
+    display: none;
+}
+
+/* ---------- Modales ---------- */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal_contenido {
+    background-color: white;
+    padding: 2rem;
+    border-radius: var(--radio);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.modal_contenido h2 {
+    color: var(--azul);
+    text-align: center;
+}
+
+.lista_detalles {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.lista_detalles li {
+    font-size: 0.95rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.3rem;
+}
+
+.campo_descripcion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.campo_descripcion textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 0.95rem;
+}
+
+.campo_descripcion textarea[readonly] {
+    background-color: #f8f9fa;
+    color: #333;
+    cursor: default;
+}
+
+.modal_acciones {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.btn_aceptar,
+.btn_editar,
+.btn_eliminar {
+    flex: 1;
+    padding: 0.7rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+.btn_aceptar { background-color: var(--azul); }
+.btn_aceptar:hover { background-color: var(--azul-oscuro); }
+
+.btn_editar { background-color: var(--naranja); }
+.btn_editar:hover { background-color: var(--naranja-oscuro); }
+
+.btn_eliminar { background-color: var(--rojo); }
+.btn_eliminar:hover { background-color: var(--rojo-oscuro); }
+
+.modal_confirmar {
+    border-top: 5px solid var(--rojo);
+}
+
+.modal_confirmar h2 {
+    color: var(--rojo);
+}
+
+.texto_confirmacion {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.modal_confirmar .campo input {
+    padding: 0.6rem 1rem;
+    border: 1px solid rgba(40, 35, 35, 0.4);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal_confirmar .campo input:focus {
+    outline: none;
+    border-color: var(--rojo);
+    box-shadow: 0 0 0 3px rgba(210, 40, 40, 0.15);
+}
+
+/* ---------- Avisos (toast) ---------- */
+
+#ToastContenedor {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    z-index: 2000;
+}
+
+.toast {
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    background-color: var(--azul);
+    border-left: 5px solid var(--naranja);
+}
+
+.toast.error {
+    background-color: var(--rojo);
+    border-left-color: white;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 720px) {
+    .navbar {
+        padding: 0 1rem;
+    }
+
+    .nav-links {
+        gap: 0.5rem;
+    }
+
+    .nav-links a {
+        padding: 0 1rem;
+        font-size: large;
+    }
+
+    .Resumen {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .Formulario {
+        margin: 1.5rem 1rem;
+        padding: 1.2rem;
+    }
+
+    .modal_acciones {
+        flex-wrap: wrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

@@ -22,29 +22,53 @@
         <div class="Filtros">
             <input type="text" id="IngresarBusqueda" placeholder="Buscar por funcionario, curso o código" aria-label="Buscar">
 
-            <select id="FiltroDepartamento" aria-label="Filtrar por departamento">
-                <option value="">Todos los Departamentos</option>
-                <option value="Administración">Administración</option>
-                <option value="Fiscalización">Fiscalización</option>
-            </select>
+            <button type="button" id="BtnToggleFiltros" class="btn_secundario btn_filtros" aria-expanded="false" aria-controls="PanelFiltros">
+                Filtros
+                <span id="ContadorFiltros" class="contador_filtros" hidden>0</span>
+            </button>
 
-            <select id="FiltroModalidad" aria-label="Filtrar por modalidad">
-                <option value="">Todas las Modalidades</option>
-                <option value="Presencial">Presencial</option>
-                <option value="Online Synchronous">Online Sincrónico</option>
-                <option value="E-Learning">E-Learning</option>
-            </select>
-
-            <select id="FiltroEstado" aria-label="Filtrar por estado">
-                <option value="">Todos los Estados</option>
-                <option value="proxima">Próxima</option>
-                <option value="en-curso">En curso</option>
-                <option value="finalizada">Finalizada</option>
-            </select>
-
-            <button type="button" id="BtnLimpiarFiltros" class="btn_secundario">Limpiar filtros</button>
             <button type="button" id="BtnExportarCSV" class="btn_secundario">Exportar CSV</button>
             <button type="button" id="BtnEliminarSeleccionados" class="btn_secundario btn_eliminar_seleccion" disabled>Eliminar seleccionados</button>
+        </div>
+
+        <div id="PanelFiltros" class="Panel_Filtros">
+            <div class="campo_filtro">
+                <label for="FiltroDepartamento">Departamento</label>
+                <select id="FiltroDepartamento" aria-label="Filtrar por departamento">
+                    <option value="">Todos los Departamentos</option>
+                    <option value="Administración">Administración</option>
+                    <option value="Asistencia">Asistencia</option>
+                    <option value="Avaluaciones">Avaluaciones</option>
+                    <option value="Dirección">Dirección</option>
+                    <option value="Fiscalización">Fiscalización</option>
+                    <option value="Jurídico">Jurídico</option>
+                    <option value="Opat">Opat</option>
+                    <option value="U. Porvenir">U. Porvenir</option>
+                    <option value="U. Puerto Natales">U. Puerto Natales</option>
+                </select>
+            </div>
+
+            <div class="campo_filtro">
+                <label for="FiltroModalidad">Modalidad</label>
+                <select id="FiltroModalidad" aria-label="Filtrar por modalidad">
+                    <option value="">Todas las Modalidades</option>
+                    <option value="Presencial">Presencial</option>
+                    <option value="E-Learning">E-Learning</option>
+                    <option value="Virtual">Virtual</option>
+                </select>
+            </div>
+
+            <div class="campo_filtro">
+                <label for="FiltroEstado">Estado</label>
+                <select id="FiltroEstado" aria-label="Filtrar por estado">
+                    <option value="">Todos los Estados</option>
+                    <option value="proxima">Próxima</option>
+                    <option value="en-curso">En curso</option>
+                    <option value="finalizada">Finalizada</option>
+                </select>
+            </div>
+
+            <button type="button" id="BtnLimpiarFiltros" class="btn_secundario">Limpiar filtros</button>
         </div>
 
         <div class="Tabla">

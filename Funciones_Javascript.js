@@ -380,8 +380,18 @@ function Generar_Tabla() {
     ActualizarEstadoBotonEliminarSeleccionados();
 }
 
+function ActualizarContadorFiltros() {
+    const contador = $("ContadorFiltros");
+    if (!contador) return;
+    const activos = [$("FiltroDepartamento").value, $("FiltroModalidad").value, $("FiltroEstado").value]
+        .filter(Boolean).length;
+    contador.textContent = activos;
+    contador.hidden = activos === 0;
+}
+
 function AplicarFiltros() {
     Estado_UI.pagina = 1;
+    ActualizarContadorFiltros();
     Generar_Tabla();
 }
 
@@ -391,6 +401,15 @@ function LimpiarFiltros() {
     $("FiltroModalidad").value = "";
     $("FiltroEstado").value = "";
     AplicarFiltros();
+}
+
+function ToggleFiltros(forzarCerrado = false) {
+    const panel = $("PanelFiltros");
+    const boton = $("BtnToggleFiltros");
+    if (!panel || !boton) return;
+    const abierto = forzarCerrado ? false : !panel.classList.contains("abierto");
+    panel.classList.toggle("abierto", abierto);
+    boton.setAttribute("aria-expanded", String(abierto));
 }
 
 /* ---------- Exportar ---------- */
@@ -830,6 +849,25 @@ function InicializarTabla() {
     ["FiltroDepartamento", "FiltroModalidad", "FiltroEstado"].forEach((id) => $(id).addEventListener("change", AplicarFiltros));
     $("BtnLimpiarFiltros").addEventListener("click", LimpiarFiltros);
     $("BtnExportarCSV").addEventListener("click", ExportarCSV);
+    ActualizarContadorFiltros();
+
+    // Panel desplegable de filtros (departamento / modalidad / estado)
+    const btnToggleFiltros = $("BtnToggleFiltros");
+    const panelFiltros = $("PanelFiltros");
+    if (btnToggleFiltros && panelFiltros) {
+        btnToggleFiltros.addEventListener("click", (e) => {
+            e.stopPropagation();
+            ToggleFiltros();
+        });
+        document.addEventListener("click", (e) => {
+            if (!panelFiltros.classList.contains("abierto")) return;
+            if (panelFiltros.contains(e.target) || btnToggleFiltros.contains(e.target)) return;
+            ToggleFiltros(true);
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && panelFiltros.classList.contains("abierto")) ToggleFiltros(true);
+        });
+    }
 
     // Orden por columna (clic o teclado)
     const encabezado = $("EncabezadoTabla");

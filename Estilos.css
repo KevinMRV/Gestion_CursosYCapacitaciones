@@ -163,6 +163,76 @@ header {
     box-shadow: 0 0 0 3px rgba(0, 100, 160, 0.15);
 }
 
+.btn_filtros {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contador_filtros {
+    display: inline-block;
+    background-color: var(--naranja);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 1.4em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    line-height: 1.3;
+}
+
+.Panel_Filtros {
+    display: none;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    max-width: 95%;
+    margin: -0.8rem auto 1.5rem;
+    padding: 1.2rem;
+    background-color: white;
+    border: 1px solid var(--borde-suave);
+    border-radius: var(--radio);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.Panel_Filtros.abierto {
+    display: flex;
+}
+
+.campo_filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 200px;
+    flex: 1;
+}
+
+.campo_filtro label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.campo_filtro select {
+    padding: 0.6rem 1rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: white;
+    cursor: pointer;
+}
+
+.campo_filtro select:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(0, 100, 160, 0.15);
+}
+
+.Panel_Filtros #BtnLimpiarFiltros {
+    align-self: flex-end;
+    white-space: nowrap;
+}
+
 /* ---------- Tabla ---------- */
 
 .Tabla {
